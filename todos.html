@@ -1,10 +1,17 @@
 <!-- In todos.html -->
 {{range .}}
-<div>
-    <form hx-delete="/todos" hx-target="#todo-list">
-        <span>{{.Title}}</span>
-        <input type="hidden" name="id" value="{{.ID}}">
-        <button type="submit">x</button>
-    </form>
-</div>
+<form hx-delete="/todos/{{.ID}}" hx-push-url="true" hx-target="#todo-list">
+    <div class="row">
+        <div class="col">
+                <div class="input-group mb-3">
+                    <input type="hidden" name="id" value="{{.ID}}">
+                    <span class="input-group-text">{{.Title}}</span>
+                    <button type="submit" class="btn btn-danger">x</button>
+                </div>
+            </div>
+            <div class="col"></div>
+            <div class="col"></div>
+        </div>
+    </div>
+</form>
 {{end}}
