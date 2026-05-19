@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"net/http/httputil"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,11 +17,18 @@ func main() {
 	r.GET("/todos", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "todos.html", todos)
 	})
-	r.DELETE("/todos", func(ctx *gin.Context) {
-		b, _ := httputil.DumpRequest(ctx.Request.Clone(ctx.Request.Context()), true)
-		fmt.Println(string(b))
+	r.DELETE("/todos/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		i, err := strconv.Atoi(id)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+		todos = append(todos[:i], todos[i+1:]...)
+		c.Redirect(http.StatusFound, "/")
 	})
-	// c.Redirect(http.StatusFound, "/")
 
 	log.Println("Starting server on :8080")
 	r.Run()
@@ -38,7 +44,17 @@ type Todo struct {
 	Done  bool
 }
 
-var todos = []Todo{
+type Todos []Todo
+
+var todos Todos = []Todo{
 	{1, "Learn Go", false},
 	{2, "Build a Todo App", false},
+}
+
+func (t Todos) Remove(i int) {
+	h := len(t) - 1
+	l := 0
+	if h == l {
+		if 
+	}
 }
